@@ -75,13 +75,25 @@ function parseIdFromPath(pathname) {
 }
 
 function validateField({ req, res, task, payload, field, type, message }) {
-  if (field in payload) {
-    if (typeof payload[field] !== type) {
+  console.log(payload);
+  if (!(field in payload)) return true;
+
+  if (typeof payload[field] !== type) {
+    serverSend(req, res, STATUS.BAD_REQUEST, { message });
+    return false;
+  }
+
+  if (type === "string") {
+    const v = payload[field].trim();
+    if (!v) {
       serverSend(req, res, STATUS.BAD_REQUEST, { message });
       return false;
     }
-    task[field] = payload[field];
+    task[field] = v;
+    return true;
   }
+
+  task[field] = payload[field];
   return true;
 }
 
@@ -135,16 +147,21 @@ const server = createServer(async (req, res) => {
 
     if (req.method === "POST" && pathname === "/api/tasks") {
       const payload = await parseBody(req);
-
-      if (typeof payload.title !== "string" || payload.title.trim() === "") {
-        return serverSend(req, res, STATUS.BAD_REQUEST, {
-          message: MESSAGES.TITLE_REQUIRED,
-        });
-      }
-
+      if (
+        !validateField({
+          req,
+          res,
+          task: db.tasks,
+          payload,
+          field: "title",
+          type: "string",
+          message: MESSAGES.TITLE_INVALID,
+        })
+      )
+        return;
       const newTask = {
         id: Date.now(),
-        title: payload.title.trim(),
+        title: payload.title,
         isCompleted: false,
       };
 
@@ -172,7 +189,9 @@ const server = createServer(async (req, res) => {
       }
 
       const payload = await parseBody(req);
-
+      if (payload.title) {
+        payload.title = payload.title.trim();
+      }
       if (
         !validateField({
           req,

@@ -10,10 +10,10 @@ Content-Type : "application/json"
     "title" : "Dev" 
 }
 
-PUT http://localhost:3000/api/tasks/1766128849367
+PUT http://localhost:3000/api/tasks/1766135160868
 Content-Type : "application/json"
 {
-    "title" : "Devs" ,
+    "title" : "" ,
     "isCompleted": false
 }
 
