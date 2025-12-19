@@ -7,7 +7,8 @@ const STATUS = {
   NOT_FOUND: 404,
   METHOD_NOT_ALLOWED: 405,
 };
-const allowUrlApi = ["http://localhost:5173"];
+const ALLOWED_ORIGIN = process.env.CLIENT_URL || "*";
+const allowUrlApi = ["http://localhost:5173", ALLOWED_ORIGIN];
 const JSON_HEADERS = {
   "Content-Type": "application/json",
 };
@@ -275,6 +276,7 @@ const server = createServer(async (req, res) => {
   }
 });
 
-server.listen(3000, "localhost", () => {
-  console.log("http://localhost:3000");
+const port = process.env.PORT || 3000;
+server.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
 });
