@@ -1,0 +1,19 @@
+GET http://localhost:3000/api/tasks
+
+
+GET http://localhost:3000/api/tasks/1766128849367s
+
+
+POST http://localhost:3000/api/tasks
+Content-Type : "application/json"
+{
+    "title" : "Dev" 
+}
+
+PUT http://localhost:3000/api/tasks/1766128849367
+Content-Type : "application/json"
+{
+    "title" : "Devs" ,
+    "isCompleted": false
+}
+
